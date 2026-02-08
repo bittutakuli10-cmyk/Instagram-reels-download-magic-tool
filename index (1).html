@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Reel Downloader | Mobile Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #833AB4 0%, #E1306C 50%, #F77737 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 25px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            background: linear-gradient(45deg, #833AB4, #E1306C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h1 {
+            font-size: 24px;
+            color: #262626;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #8e8e8e;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .instructions {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 25px;
+            border-left: 4px solid #E1306C;
+        }
+        
+        .instructions h3 {
+            color: #262626;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .input-section {
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #262626;
+            font-size: 15px;
+        }
+        
+        .url-input {
+            padding: 16px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .url-input:focus {
+            border-color: #E1306C;
+            box-shadow: 0 0 0 3px rgba(225, 48, 108, 0.1);
+        }
+        
+        .url-input::placeholder {
+            color: #999;
+        }
+        
+        .btn {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #833AB4, #E1306C);
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(225, 48, 108, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .result-section {
+            display: none;
+            margin-top: 25px;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .result-card {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        
+        .thumbnail {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+            margin: 0 auto 15px;
+            display: block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .reel-info {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .reel-info h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #262626;
+        }
+        
+        .reel-info p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .download-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #405DE6, #5851DB);
+            color: white;
+        }
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #c62828;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #8e8e8e;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .disclaimer {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #E1306C;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .url-input, .btn {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fab fa-instagram"></i>
+                <h1>Instagram Reel Downloader</h1>
+            </div>
+            <p class="subtitle">Download Instagram reels directly to your device. Works on mobile Chrome browser.</p>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> How to Use</h3>
+            <ol>
+                <li>Open Instagram app and find the reel you want to download</li>
+                <li>Tap the three dots (...) and select "Copy link"</li>
+                <li>Paste the link in the field below and click "Download Reel"</li>
+                <li>Choose your preferred video quality and download</li>
+            </ol>
+        </div>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="reel-url"><i class="fas fa-link"></i> Instagram Reel URL</label>
+                <input type="url" id="reel-url" class="url-input" placeholder="https://www.instagram.com/reel/..." required>
+                <button id="download-btn" class="btn btn-primary">
+                    <i class="fas fa-download"></i> Download Reel
+                </button>
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+        
+        <div class="error-message" id="error-message">
+            <i class="fas fa-exclamation-triangle"></i> <span id="error-text">An error occurred. Please check the URL and try again.</span>
+        </div>
+        
+        <div class="result-section" id="result-section">
+            <div class="result-card">
+                <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Reel Thumbnail" class="thumbnail" id="reel-thumbnail">
+                
+                <div class="reel-info">
+                    <h4 id="reel-title">Summer Vibes Reel</h4>
+                    <p id="reel-details">Duration: 15s • Likes: 12.5K • Posted: 2 days ago</p>
+                </div>
+                
+                <div class="download-options">
+                    <button class="btn download-btn" id="download-hd">
+                        <i class="fas fa-hd"></i> Download HD Quality
+                    </button>
+                    <button class="btn download-btn" id="download-sd">
+                        <i class="fas fa-video"></i> Download Standard Quality
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This tool works on mobile Chrome browser. Make sure you're using the latest version.</p>
+            <p class="disclaimer">Disclaimer: This tool is for personal use only. Please respect content creators' rights and only download content you have permission to use.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reelUrlInput = document.getElementById('reel-url');
+            const downloadBtn = document.getElementById('download-btn');
+            const resultSection = document.getElementById('result-section');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const reelThumbnail = document.getElementById('reel-thumbnail');
+            const reelTitle = document.getElementById('reel-title');
+            const reelDetails = document.getElementById('reel-details');
+            const downloadHd = document.getElementById('download-hd');
+            const downloadSd = document.getElementById('download-sd');
+            
+            // Example Instagram reel URLs for demo
+            const exampleUrls = [
+                "https://www.instagram.com/reel/Cxample123/",
+                "https://www.instagram.com/reel/CreativeReel/",
+                "https://www.instagram.com/reel/SummerVibes2023/"
+            ];
+            
+            // Set a random example URL as placeholder
+            reelUrlInput.placeholder = exampleUrls[Math.floor(Math.random() * exampleUrls.length)];
+            
+            // Handle download button click
+            downloadBtn.addEventListener('click', function() {
+                const url = reelUrlInput.value.trim();
+                
+                if (!url) {
+                    showError("Please enter an Instagram reel URL");
+                    return;
+                }
+                
+                if (!isValidInstagramUrl(url)) {
+                    showError("Please enter a valid Instagram reel URL");
+                    return;
+                }
+                
+                // Show loading indicator
+                loading.style.display = 'block';
+                resultSection.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    processReelDownload(url);
+                }, 1500);
+            });
+            
+            // Handle Enter key in input field
+            reelUrlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    downloadBtn.click();
+                }
+            });
+            
+            // Download HD button
+            downloadHd.addEventListener('click', function() {
+                simulateDownload("HD");
+            });
+            
+            // Download SD button
+            downloadSd.addEventListener('click', function() {
+                simulateDownload("SD");
+            });
+            
+            // Function to validate Instagram URL
+            function isValidInstagramUrl(url) {
+                const instagramRegex = /^https?:\/\/(?:www\.)?instagram\.com\/(?:reel|p)\/[a-zA-Z0-9_-]+\/?$/;
+                return instagramRegex.test(url);
+            }
+            
+            // Process reel download (simulated)
+            function processReelDownload(url) {
+                // Hide loading indicator
+                loading.style.display = 'none';
+                
+                // In a real implementation, this would call an API to get reel details
+                // For demo purposes, we'll simulate a response
+                const reelId = extractReelId(url);
+                
+                if (!reelId) {
+                    showError("Could not extract reel ID from the URL. Please check and try again.");
+                    return;
+                }
+                
+                // Simulate successful response
+                const reelData = {
+                    id: reelId,
+                    title: "Awesome Instagram Reel",
+                    duration: "12 seconds",
+                    likes: "15.2K",
+                    posted: "3 days ago",
+                    thumbnail: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+                    hdUrl: `https://example.com/download/${reelId}/hd`,
+                    sdUrl: `https://example.com/download/${reelId}/sd`
+                };
+                
+                // Update UI with reel data
+                updateReelInfo(reelData);
+                
+                // Show result section
+                resultSection.style.display = 'block';
+                
+                // Set download URLs (in a real app, these would be actual download endpoints)
+                downloadHd.setAttribute('data-url', reelData.hdUrl);
+                downloadSd.setAttribute('data-url', reelData.sdUrl);
+            }
+            
+            // Extract reel ID from URL (simplified)
+            function extractReelId(url) {
+                try {
+                    const urlParts = url.split('/');
+                    const reelIndex = urlParts.findIndex(part => part === 'reel');
+                    
+                    if (reelIndex !== -1 && urlParts.length > reelIndex + 1) {
+                        return urlParts[reelIndex + 1].replace(/\/$/, '');
+                    }
+                    
+                    return "sample_" + Math.random().toString(36).substring(2, 9);
+                } catch (e) {
+                    return null;
+                }
+            }
+            
+            // Update reel information in UI
+            function updateReelInfo(data) {
+                reelThumbnail.src = data.thumbnail;
+                reelTitle.textContent = data.title;
+                reelDetails.textContent = `Duration: ${data.duration} • Likes: ${data.likes} • Posted: ${data.posted}`;
+            }
+            
+            // Show error message
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+                resultSection.style.display = 'none';
+                loading.style.display = 'none';
+            }
+            
+            // Simulate download process
+            function simulateDownload(quality) {
+                const button = quality === "HD" ? downloadHd : downloadSd;
+                const originalText = button.innerHTML;
+                
+                // Change button text to show downloading
+                button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Downloading ${quality}...`;
+                button.disabled = true;
+                
+                // Simulate download delay
+                setTimeout(() => {
+                    // Reset button
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    
+                    // Show success message
+                    alert(`Download complete! Your ${quality} quality reel has been downloaded.`);
+                    
+                    // In a real implementation, this would trigger the actual download
+                    // For security reasons, direct file downloads from client-side JavaScript
+                    // are restricted. In a real app, you would need a server-side proxy.
+                    
+                }, 2000);
+            }
+            
+            // Add some sample URLs for quick testing
+            reelUrlInput.addEventListener('focus', function() {
+                if (!this.value) {
+                    this.value = exampleUrls[Math.floor(Math.random() * exampleUrls.length)];
+                }
+            });
+        });
+    </script>
+</body>
+</html>
